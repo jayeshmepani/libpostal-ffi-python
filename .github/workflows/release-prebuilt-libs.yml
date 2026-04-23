@@ -117,12 +117,14 @@ jobs:
           install: >-
             base-devel
             mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-autotools
+            autoconf
+            automake
+            libtool
             git
 
       - name: Compile shared library
-        shell: pwsh
-        run: .\build\compile-windows.ps1
+        shell: msys2 {0}
+        run: bash build/compile-windows.sh
 
       - name: Create release archive
         shell: pwsh
