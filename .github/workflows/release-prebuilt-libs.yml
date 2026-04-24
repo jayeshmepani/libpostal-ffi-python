@@ -153,7 +153,7 @@ jobs:
           tar -xzf dist/libpostal-linux-arm64.tar.gz -C postalkit/libs/linux-arm64
           tar -xzf dist/libpostal-macos-x64.tar.gz -C postalkit/libs/macos-x64
           tar -xzf dist/libpostal-macos-arm64.tar.gz -C postalkit/libs/macos-arm64
-          unzip dist/libpostal-windows-x64.zip -d postalkit/libs/windows-x64
+          unzip -o dist/libpostal-windows-x64.zip -d postalkit/libs/windows-x64
 
           # 3. Push to main branch
           git config --local user.name "github-actions[bot]"
