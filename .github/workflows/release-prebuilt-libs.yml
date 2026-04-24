@@ -158,6 +158,6 @@ jobs:
           # 3. Push to main branch
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add postalkit/libs/
+          git add --force postalkit/libs/
           git commit -m "chore: populate prebuilt binaries in libs/ directory [skip ci]" || echo "No changes to commit"
           git push origin main

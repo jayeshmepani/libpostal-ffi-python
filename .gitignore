@@ -46,8 +46,9 @@ venv.bak/
 *.swo
 
 # Project specific ignores
-postalkit/libs/*/*
-!postalkit/libs/README.md
+# Allow prebuilt binaries in the libs folder
+!postalkit/libs/
+
 
 # Build artifacts
 libpostal/
