@@ -5,7 +5,7 @@ import os
 import sys
 from pathlib import Path
 
-POSTALKIT_VERSION = "v0.1.0"
+POSTALKIT_VERSION = "v1.0.0"
 REPO_URL = f"https://github.com/jayeshmepani/libpostal-ffi-python/releases/download/{POSTALKIT_VERSION}"
 
 TARGETS = {

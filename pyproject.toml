@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "postalkit"
-version = "0.1.0"
+version = "1.0.0"
 description = "Zero-setup, one-command install Python package for libpostal"
 readme = "README.md"
 requires-python = ">=3.8"
