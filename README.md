@@ -67,4 +67,4 @@ ensure_all_assets()
 
 ## 📄 License
 
-MIT License.
+MIT License. Developed with 💙 by [Jayesh Mepani](https://github.com/jayeshmepani).
