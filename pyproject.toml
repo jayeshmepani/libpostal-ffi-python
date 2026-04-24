@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
 authors = [
-    { name = "PostalKit Contributors", email = "hello@postalkit.local" }
+    { name = "PostalKit Contributors", email = "hello@postalkit.dev" }
 ]
 keywords = ["libpostal", "address", "nlp", "parser", "zero-setup"]
 classifiers = [
