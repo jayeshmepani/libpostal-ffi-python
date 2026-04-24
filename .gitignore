@@ -48,6 +48,8 @@ venv.bak/
 # Project specific ignores
 # Allow prebuilt binaries in the libs folder
 !postalkit/libs/
+!postalkit/libs/**/*.so
+
 
 
 # Build artifacts
