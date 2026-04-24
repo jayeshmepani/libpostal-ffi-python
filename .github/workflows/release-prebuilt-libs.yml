@@ -161,3 +161,30 @@ jobs:
           git add --force postalkit/libs/
           git commit -m "chore: populate prebuilt binaries in libs/ directory [skip ci]" || echo "No changes to commit"
           git push origin main
+
+  publish-to-pypi:
+    name: Publish Final Package to PyPI
+    needs: [upload-release-assets]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main # Pull the latest main with the committed binaries
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          
+      - name: Install build tools
+        run: python -m pip install --upgrade pip build
+        
+      - name: Build and Publish
+        run: |
+          python -m build
+          
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
