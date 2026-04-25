@@ -6,7 +6,7 @@ from ..runtime.downloader import download_file
 from ..exceptions import DependencyMissingError
 from .checksum import verify_checksum
 
-POSTALKIT_VERSION = "v1.0.4"
+POSTALKIT_VERSION = "v1.0.5"
 BINARIES_BASE_URL = os.environ.get("POSTALKIT_BINARIES_URL", f"https://github.com/jayeshmepani/libpostal-ffi-python/releases/download/{POSTALKIT_VERSION}")
 MODEL_DATA_URL = os.environ.get("POSTALKIT_MODEL_URL", "https://s3.amazonaws.com/libpostal/data/libpostal_data.tar.gz")
 
