@@ -1,5 +1,22 @@
 # PostalKit
 
+
+[![PyPI version](https://img.shields.io/pypi/v/postalkit.svg?style=flat-square)](https://pypi.org/project/postalkit/) 
+
+
+[![Downloads](https://static.pepy.tech/badge/postalkit)](https://pepy.tech/projects/postalkit) 
+
+[![Downloads](https://img.shields.io/endpoint?url=https://pepy.tech/badge/postalkit)](https://pepy.tech/projects/postalkit) 
+
+[![Python Versions](https://img.shields.io/pypi/pyversions/postalkit.svg?style=flat-square)](https://pypi.org/project/postalkit/) 
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT) 
+
+[![Wheel](https://img.shields.io/pypi/wheel/postalkit?style=flat-square)](https://pypi.org/project/postalkit/) 
+
+[![Status](https://img.shields.io/pypi/status/postalkit?style=flat-square)](https://pypi.org/project/postalkit/)  
+
+
 **Zero-setup, one-command install Python package for libpostal. Designed as a strict 1:1 C-FFI wrapper.**
 
 Parsing international street addresses shouldn't require a Ph.D. in C compilation. `postalkit` provides the ultimate zero-friction environment to run the amazing [libpostal](https://github.com/openvenues/libpostal) C library natively in Python, without abstracting away its raw power. 
