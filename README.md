@@ -2,18 +2,10 @@
 
 
 [![PyPI version](https://img.shields.io/pypi/v/postalkit.svg?style=flat-square)](https://pypi.org/project/postalkit/) 
-
-
 [![Downloads](https://static.pepy.tech/badge/postalkit)](https://pepy.tech/projects/postalkit) 
-
-[![Downloads](https://img.shields.io/endpoint?url=https://pepy.tech/badge/postalkit)](https://pepy.tech/projects/postalkit) 
-
 [![Python Versions](https://img.shields.io/pypi/pyversions/postalkit.svg?style=flat-square)](https://pypi.org/project/postalkit/) 
-
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT) 
-
 [![Wheel](https://img.shields.io/pypi/wheel/postalkit?style=flat-square)](https://pypi.org/project/postalkit/) 
-
 [![Status](https://img.shields.io/pypi/status/postalkit?style=flat-square)](https://pypi.org/project/postalkit/)  
 
 
