@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "postalkit"
-version = "1.0.5"
+version = "1.0.6"
 description = "Complete 100% 1:1 Python FFI Wrapper for the libpostal C Library - Direct C function calls with zero abstraction for maximum address parsing precision"
 readme = "README.md"
 requires-python = ">=3.10"

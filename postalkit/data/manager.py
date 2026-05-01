@@ -7,7 +7,7 @@ from ..runtime.paths import get_binary_dir, get_model_dir
 from ..runtime.platform import get_library_name, get_platform_identifier
 from .checksum import verify_checksum
 
-POSTALKIT_VERSION = "v1.0.5"
+POSTALKIT_VERSION = "v1.0.6"
 BINARIES_BASE_URL = os.environ.get(
     "POSTALKIT_BINARIES_URL",
     f"https://github.com/jayeshmepani/libpostal-ffi-python/releases/download/{POSTALKIT_VERSION}",

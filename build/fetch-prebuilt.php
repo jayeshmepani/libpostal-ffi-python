@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-$postalkitVersion = "v1.0.5";
+$postalkitVersion = "v1.0.6";
 $repoUrl = "https://github.com/jayeshmepani/libpostal-ffi-python/releases/download/{$postalkitVersion}";
 
 $targets = [
