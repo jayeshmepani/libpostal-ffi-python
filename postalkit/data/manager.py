@@ -7,13 +7,14 @@ from ..runtime.paths import get_binary_dir, get_model_dir
 from ..runtime.platform import get_library_name, get_platform_identifier
 from .checksum import verify_checksum
 
-POSTALKIT_VERSION = "v1.0.6"
+POSTALKIT_VERSION = "v1.0.7"
 BINARIES_BASE_URL = os.environ.get(
     "POSTALKIT_BINARIES_URL",
     f"https://github.com/jayeshmepani/libpostal-ffi-python/releases/download/{POSTALKIT_VERSION}",
 )
 MODEL_DATA_URL = os.environ.get(
-    "POSTALKIT_MODEL_URL", "https://s3.amazonaws.com/libpostal/data/libpostal_data.tar.gz"
+    "POSTALKIT_MODEL_URL",
+    "https://s3.amazonaws.com/libpostal/data/libpostal_data.tar.gz",
 )
 
 
@@ -26,14 +27,18 @@ def _download_and_verify(url: str, tar_path: Path, desc: str):
     checksum_url = f"{url}.sha256"
     checksum_path = tar_path.with_suffix(".tar.gz.sha256")
     try:
-        download_file(checksum_url, checksum_path, extract=False, desc=f"{desc} Checksum")
+        download_file(
+            checksum_url, checksum_path, extract=False, desc=f"{desc} Checksum"
+        )
         with open(checksum_path) as f:
             # typical format: "hash  filename"
             expected_hash = f.read().strip().split()[0]
 
         if not verify_checksum(tar_path, expected_hash):
             os.remove(tar_path)
-            raise DependencyMissingError(f"Checksum verification failed for {tar_path.name}")
+            raise DependencyMissingError(
+                f"Checksum verification failed for {tar_path.name}"
+            )
     except Exception as e:
         # If the checksum file doesn't exist remotely or fails to download,
         # we strictly fail to prevent compromised or corrupt binaries in production.
