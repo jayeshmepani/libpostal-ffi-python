@@ -1,5 +1,5 @@
 import platform
-import sys
+
 
 def get_os() -> str:
     """Returns a normalized OS name."""
@@ -9,6 +9,7 @@ def get_os() -> str:
     if system == "windows":
         return "windows"
     return "linux"
+
 
 def get_arch() -> str:
     """Returns a normalized architecture name."""
@@ -21,14 +22,16 @@ def get_arch() -> str:
         return "x86"
     return arch
 
+
 def get_library_name() -> str:
     """Returns the expected shared library file name for the current OS."""
     os_name = get_os()
     if os_name == "macos":
         return "libpostal.dylib"
-    elif os_name == "windows":
+    if os_name == "windows":
         return "postal.dll"
     return "libpostal.so"
+
 
 def get_platform_identifier() -> str:
     """Returns an identifier like 'linux-x86_64'."""

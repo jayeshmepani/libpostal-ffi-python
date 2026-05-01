@@ -1,0 +1,40 @@
+name: Quality Checks
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  quality:
+    name: Lint, Type Check and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          
+      - name: Ruff Check (Lint)
+        run: ruff check postalkit/ tests/
+        
+      - name: Ruff Format (Style)
+        run: ruff format --check postalkit/ tests/
+        
+      - name: Pyright (Type Check)
+        run: |
+          pip install pyright
+          pyright postalkit/
+          
+      - name: Pytest (Unit Tests)
+        run: pytest tests/
