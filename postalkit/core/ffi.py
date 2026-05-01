@@ -1,8 +1,9 @@
 import ctypes
 import os
-from ..runtime.loader import load_libpostal
+
 from ..data.manager import ensure_all_assets, ensure_models
 from ..exceptions import InitializationError
+from ..runtime.loader import load_libpostal
 
 # Global state
 _lib = None
@@ -57,20 +58,20 @@ LIBPOSTAL_TOKEN_TYPE_INVALID_CHAR = 500
 
 # Address Components
 LIBPOSTAL_ADDRESS_NONE = 0
-LIBPOSTAL_ADDRESS_ANY = (1 << 0)
-LIBPOSTAL_ADDRESS_NAME = (1 << 1)
-LIBPOSTAL_ADDRESS_HOUSE_NUMBER = (1 << 2)
-LIBPOSTAL_ADDRESS_STREET = (1 << 3)
-LIBPOSTAL_ADDRESS_UNIT = (1 << 4)
-LIBPOSTAL_ADDRESS_LEVEL = (1 << 5)
-LIBPOSTAL_ADDRESS_STAIRCASE = (1 << 6)
-LIBPOSTAL_ADDRESS_ENTRANCE = (1 << 7)
-LIBPOSTAL_ADDRESS_CATEGORY = (1 << 8)
-LIBPOSTAL_ADDRESS_NEAR = (1 << 9)
-LIBPOSTAL_ADDRESS_TOPONYM = (1 << 13)
-LIBPOSTAL_ADDRESS_POSTAL_CODE = (1 << 14)
-LIBPOSTAL_ADDRESS_PO_BOX = (1 << 15)
-LIBPOSTAL_ADDRESS_ALL = ((1 << 16) - 1)
+LIBPOSTAL_ADDRESS_ANY = 1 << 0
+LIBPOSTAL_ADDRESS_NAME = 1 << 1
+LIBPOSTAL_ADDRESS_HOUSE_NUMBER = 1 << 2
+LIBPOSTAL_ADDRESS_STREET = 1 << 3
+LIBPOSTAL_ADDRESS_UNIT = 1 << 4
+LIBPOSTAL_ADDRESS_LEVEL = 1 << 5
+LIBPOSTAL_ADDRESS_STAIRCASE = 1 << 6
+LIBPOSTAL_ADDRESS_ENTRANCE = 1 << 7
+LIBPOSTAL_ADDRESS_CATEGORY = 1 << 8
+LIBPOSTAL_ADDRESS_NEAR = 1 << 9
+LIBPOSTAL_ADDRESS_TOPONYM = 1 << 13
+LIBPOSTAL_ADDRESS_POSTAL_CODE = 1 << 14
+LIBPOSTAL_ADDRESS_PO_BOX = 1 << 15
+LIBPOSTAL_ADDRESS_ALL = (1 << 16) - 1
 
 # Normalize String Options
 LIBPOSTAL_NORMALIZE_STRING_LATIN_ASCII = 1 << 0
@@ -97,15 +98,19 @@ LIBPOSTAL_NORMALIZE_TOKEN_REPLACE_NUMERIC_TOKEN_LETTERS = 1 << 8
 LIBPOSTAL_NORMALIZE_TOKEN_REPLACE_NUMERIC_HYPHENS = 1 << 9
 
 LIBPOSTAL_NORMALIZE_DEFAULT_STRING_OPTIONS = (
-    LIBPOSTAL_NORMALIZE_STRING_LATIN_ASCII | LIBPOSTAL_NORMALIZE_STRING_COMPOSE |
-    LIBPOSTAL_NORMALIZE_STRING_TRIM | LIBPOSTAL_NORMALIZE_STRING_REPLACE_HYPHENS |
-    LIBPOSTAL_NORMALIZE_STRING_STRIP_ACCENTS | LIBPOSTAL_NORMALIZE_STRING_LOWERCASE
+    LIBPOSTAL_NORMALIZE_STRING_LATIN_ASCII
+    | LIBPOSTAL_NORMALIZE_STRING_COMPOSE
+    | LIBPOSTAL_NORMALIZE_STRING_TRIM
+    | LIBPOSTAL_NORMALIZE_STRING_REPLACE_HYPHENS
+    | LIBPOSTAL_NORMALIZE_STRING_STRIP_ACCENTS
+    | LIBPOSTAL_NORMALIZE_STRING_LOWERCASE
 )
 LIBPOSTAL_NORMALIZE_DEFAULT_TOKEN_OPTIONS = (
-    LIBPOSTAL_NORMALIZE_TOKEN_REPLACE_HYPHENS | LIBPOSTAL_NORMALIZE_TOKEN_DELETE_FINAL_PERIOD |
-    LIBPOSTAL_NORMALIZE_TOKEN_DELETE_ACRONYM_PERIODS |
-    LIBPOSTAL_NORMALIZE_TOKEN_DROP_ENGLISH_POSSESSIVES |
-    LIBPOSTAL_NORMALIZE_TOKEN_DELETE_OTHER_APOSTROPHE
+    LIBPOSTAL_NORMALIZE_TOKEN_REPLACE_HYPHENS
+    | LIBPOSTAL_NORMALIZE_TOKEN_DELETE_FINAL_PERIOD
+    | LIBPOSTAL_NORMALIZE_TOKEN_DELETE_ACRONYM_PERIODS
+    | LIBPOSTAL_NORMALIZE_TOKEN_DROP_ENGLISH_POSSESSIVES
+    | LIBPOSTAL_NORMALIZE_TOKEN_DELETE_OTHER_APOSTROPHE
 )
 LIBPOSTAL_NORMALIZE_TOKEN_OPTIONS_DROP_PERIODS = (
     LIBPOSTAL_NORMALIZE_TOKEN_DELETE_FINAL_PERIOD | LIBPOSTAL_NORMALIZE_TOKEN_DELETE_ACRONYM_PERIODS
@@ -249,22 +254,25 @@ def _setup_ffi_signatures(lib):
 
     lib.libpostal_get_default_options.restype = libpostal_normalize_options_t
     lib.libpostal_expand_address.argtypes = [
-        ctypes.c_char_p, libpostal_normalize_options_t, ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        libpostal_normalize_options_t,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_expand_address.restype = ctypes.POINTER(ctypes.c_char_p)
     lib.libpostal_expand_address_root.argtypes = [
-        ctypes.c_char_p, libpostal_normalize_options_t, ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        libpostal_normalize_options_t,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_expand_address_root.restype = ctypes.POINTER(ctypes.c_char_p)
     lib.libpostal_expansion_array_destroy.argtypes = [
-        ctypes.POINTER(ctypes.c_char_p), ctypes.c_size_t
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.c_size_t,
     ]
     lib.libpostal_expansion_array_destroy.restype = None
 
     lib.libpostal_get_address_parser_default_options.restype = libpostal_address_parser_options_t
-    lib.libpostal_parse_address.argtypes = [
-        ctypes.c_char_p, libpostal_address_parser_options_t
-    ]
+    lib.libpostal_parse_address.argtypes = [ctypes.c_char_p, libpostal_address_parser_options_t]
     lib.libpostal_parse_address.restype = ctypes.POINTER(libpostal_address_parser_response_t)
     lib.libpostal_address_parser_response_destroy.argtypes = [
         ctypes.POINTER(libpostal_address_parser_response_t)
@@ -274,7 +282,9 @@ def _setup_ffi_signatures(lib):
     lib.libpostal_parser_print_features.restype = ctypes.c_bool
 
     lib.libpostal_classify_language.argtypes = [ctypes.c_char_p]
-    lib.libpostal_classify_language.restype = ctypes.POINTER(libpostal_language_classifier_response_t)
+    lib.libpostal_classify_language.restype = ctypes.POINTER(
+        libpostal_language_classifier_response_t
+    )
     lib.libpostal_language_classifier_response_destroy.argtypes = [
         ctypes.POINTER(libpostal_language_classifier_response_t)
     ]
@@ -282,52 +292,72 @@ def _setup_ffi_signatures(lib):
 
     lib.libpostal_get_near_dupe_hash_default_options.restype = libpostal_near_dupe_hash_options_t
     lib.libpostal_near_dupe_name_hashes.argtypes = [
-        ctypes.c_char_p, libpostal_normalize_options_t, ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        libpostal_normalize_options_t,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_near_dupe_name_hashes.restype = ctypes.POINTER(ctypes.c_char_p)
     lib.libpostal_near_dupe_hashes.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_char_p),
-        libpostal_near_dupe_hash_options_t, ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_char_p),
+        libpostal_near_dupe_hash_options_t,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_near_dupe_hashes.restype = ctypes.POINTER(ctypes.c_char_p)
     lib.libpostal_near_dupe_hashes_languages.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_char_p),
-        libpostal_near_dupe_hash_options_t, ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p),
-        ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_char_p),
+        libpostal_near_dupe_hash_options_t,
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_near_dupe_hashes_languages.restype = ctypes.POINTER(ctypes.c_char_p)
     lib.libpostal_place_languages.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_char_p),
-        ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_place_languages.restype = ctypes.POINTER(ctypes.c_char_p)
 
     lib.libpostal_get_default_duplicate_options.restype = libpostal_duplicate_options_t
     lib.libpostal_get_duplicate_options_with_languages.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p)
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
     ]
     lib.libpostal_get_duplicate_options_with_languages.restype = libpostal_duplicate_options_t
 
     dup_funcs = [
-        lib.libpostal_is_name_duplicate, lib.libpostal_is_street_duplicate,
-        lib.libpostal_is_house_number_duplicate, lib.libpostal_is_po_box_duplicate,
-        lib.libpostal_is_unit_duplicate, lib.libpostal_is_floor_duplicate,
-        lib.libpostal_is_postal_code_duplicate
+        lib.libpostal_is_name_duplicate,
+        lib.libpostal_is_street_duplicate,
+        lib.libpostal_is_house_number_duplicate,
+        lib.libpostal_is_po_box_duplicate,
+        lib.libpostal_is_unit_duplicate,
+        lib.libpostal_is_floor_duplicate,
+        lib.libpostal_is_postal_code_duplicate,
     ]
     for func in dup_funcs:
         func.argtypes = [ctypes.c_char_p, ctypes.c_char_p, libpostal_duplicate_options_t]
         func.restype = ctypes.c_int
 
     lib.libpostal_is_toponym_duplicate.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_char_p),
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_char_p),
-        libpostal_duplicate_options_t
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_char_p),
+        libpostal_duplicate_options_t,
     ]
     lib.libpostal_is_toponym_duplicate.restype = ctypes.c_int
 
     lib.libpostal_get_default_fuzzy_duplicate_options.restype = libpostal_fuzzy_duplicate_options_t
     lib.libpostal_get_default_fuzzy_duplicate_options_with_languages.argtypes = [
-        ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p)
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
     ]
     lib.libpostal_get_default_fuzzy_duplicate_options_with_languages.restype = (
         libpostal_fuzzy_duplicate_options_t
@@ -336,32 +366,49 @@ def _setup_ffi_signatures(lib):
     fuzzy_funcs = [lib.libpostal_is_name_duplicate_fuzzy, lib.libpostal_is_street_duplicate_fuzzy]
     for func in fuzzy_funcs:
         func.argtypes = [
-            ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_double),
-            ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_double),
-            libpostal_fuzzy_duplicate_options_t
+            ctypes.c_size_t,
+            ctypes.POINTER(ctypes.c_char_p),
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_size_t,
+            ctypes.POINTER(ctypes.c_char_p),
+            ctypes.POINTER(ctypes.c_double),
+            libpostal_fuzzy_duplicate_options_t,
         ]
         func.restype = libpostal_fuzzy_duplicate_status_t
 
     lib.libpostal_tokenize.argtypes = [
-        ctypes.c_char_p, ctypes.c_bool, ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        ctypes.c_bool,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_tokenize.restype = ctypes.POINTER(libpostal_token_t)
 
     lib.libpostal_normalize_string_languages.argtypes = [
-        ctypes.c_char_p, ctypes.c_uint64, ctypes.c_size_t, ctypes.POINTER(ctypes.c_char_p)
+        ctypes.c_char_p,
+        ctypes.c_uint64,
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
     ]
     lib.libpostal_normalize_string_languages.restype = ctypes.c_char_p
     lib.libpostal_normalize_string.argtypes = [ctypes.c_char_p, ctypes.c_uint64]
     lib.libpostal_normalize_string.restype = ctypes.c_char_p
 
     lib.libpostal_normalized_tokens.argtypes = [
-        ctypes.c_char_p, ctypes.c_uint64, ctypes.c_uint64, ctypes.c_bool,
-        ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        ctypes.c_uint64,
+        ctypes.c_uint64,
+        ctypes.c_bool,
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_normalized_tokens.restype = ctypes.POINTER(libpostal_normalized_token_t)
     lib.libpostal_normalized_tokens_languages.argtypes = [
-        ctypes.c_char_p, ctypes.c_uint64, ctypes.c_uint64, ctypes.c_bool, ctypes.c_size_t,
-        ctypes.POINTER(ctypes.c_char_p), ctypes.POINTER(ctypes.c_size_t)
+        ctypes.c_char_p,
+        ctypes.c_uint64,
+        ctypes.c_uint64,
+        ctypes.c_bool,
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_size_t),
     ]
     lib.libpostal_normalized_tokens_languages.restype = ctypes.POINTER(libpostal_normalized_token_t)
 
@@ -394,9 +441,13 @@ def initialize():
 
 
 def get_lib() -> ctypes.CDLL:
+    global _lib, _is_initialized
     if not _is_initialized:
         initialize()
+    if _lib is None:
+        raise InitializationError("Library not initialized") from None
     return _lib
+
 
 # --- Direct 1:1 FFI Wrappers ---
 
@@ -468,7 +519,7 @@ def libpostal_parse_address(
 
 
 def libpostal_address_parser_response_destroy(
-    self_ptr: ctypes.POINTER(libpostal_address_parser_response_t)
+    self_ptr: ctypes.POINTER(libpostal_address_parser_response_t),
 ) -> None:
     return get_lib().libpostal_address_parser_response_destroy(self_ptr)
 
@@ -477,14 +528,14 @@ def libpostal_parser_print_features(print_features: bool) -> bool:
     return get_lib().libpostal_parser_print_features(print_features)
 
 
-def libpostal_classify_language(
-    address: bytes
-) -> ctypes.POINTER(libpostal_language_classifier_response_t):
+def libpostal_classify_language(address: bytes) -> ctypes.POINTER(
+    libpostal_language_classifier_response_t
+):
     return get_lib().libpostal_classify_language(address)
 
 
 def libpostal_language_classifier_response_destroy(
-    self_ptr: ctypes.POINTER(libpostal_language_classifier_response_t)
+    self_ptr: ctypes.POINTER(libpostal_language_classifier_response_t),
 ) -> None:
     return get_lib().libpostal_language_classifier_response_destroy(self_ptr)
 
@@ -494,27 +545,31 @@ def libpostal_get_near_dupe_hash_default_options() -> libpostal_near_dupe_hash_o
 
 
 def libpostal_near_dupe_name_hashes(
-    name: bytes, normalize_options: libpostal_normalize_options_t,
-    num_hashes: ctypes.POINTER(ctypes.c_size_t)
+    name: bytes,
+    normalize_options: libpostal_normalize_options_t,
+    num_hashes: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(ctypes.c_char_p):
     return get_lib().libpostal_near_dupe_name_hashes(name, normalize_options, num_hashes)
 
 
 def libpostal_near_dupe_hashes(
-    num_components: int, labels: ctypes.POINTER(ctypes.c_char_p),
-    values: ctypes.POINTER(ctypes.c_char_p), options: libpostal_near_dupe_hash_options_t,
-    num_hashes: ctypes.POINTER(ctypes.c_size_t)
+    num_components: int,
+    labels: ctypes.POINTER(ctypes.c_char_p),
+    values: ctypes.POINTER(ctypes.c_char_p),
+    options: libpostal_near_dupe_hash_options_t,
+    num_hashes: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(ctypes.c_char_p):
-    return get_lib().libpostal_near_dupe_hashes(
-        num_components, labels, values, options, num_hashes
-    )
+    return get_lib().libpostal_near_dupe_hashes(num_components, labels, values, options, num_hashes)
 
 
 def libpostal_near_dupe_hashes_languages(
-    num_components: int, labels: ctypes.POINTER(ctypes.c_char_p),
-    values: ctypes.POINTER(ctypes.c_char_p), options: libpostal_near_dupe_hash_options_t,
-    num_languages: int, languages: ctypes.POINTER(ctypes.c_char_p),
-    num_hashes: ctypes.POINTER(ctypes.c_size_t)
+    num_components: int,
+    labels: ctypes.POINTER(ctypes.c_char_p),
+    values: ctypes.POINTER(ctypes.c_char_p),
+    options: libpostal_near_dupe_hash_options_t,
+    num_languages: int,
+    languages: ctypes.POINTER(ctypes.c_char_p),
+    num_hashes: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(ctypes.c_char_p):
     return get_lib().libpostal_near_dupe_hashes_languages(
         num_components, labels, values, options, num_languages, languages, num_hashes
@@ -522,8 +577,10 @@ def libpostal_near_dupe_hashes_languages(
 
 
 def libpostal_place_languages(
-    num_components: int, labels: ctypes.POINTER(ctypes.c_char_p),
-    values: ctypes.POINTER(ctypes.c_char_p), num_languages: ctypes.POINTER(ctypes.c_size_t)
+    num_components: int,
+    labels: ctypes.POINTER(ctypes.c_char_p),
+    values: ctypes.POINTER(ctypes.c_char_p),
+    num_languages: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(ctypes.c_char_p):
     return get_lib().libpostal_place_languages(num_components, labels, values, num_languages)
 
@@ -581,10 +638,13 @@ def libpostal_is_postal_code_duplicate(
 
 
 def libpostal_is_toponym_duplicate(
-    num_components1: int, labels1: ctypes.POINTER(ctypes.c_char_p),
-    values1: ctypes.POINTER(ctypes.c_char_p), num_components2: int,
-    labels2: ctypes.POINTER(ctypes.c_char_p), values2: ctypes.POINTER(ctypes.c_char_p),
-    options: libpostal_duplicate_options_t
+    num_components1: int,
+    labels1: ctypes.POINTER(ctypes.c_char_p),
+    values1: ctypes.POINTER(ctypes.c_char_p),
+    num_components2: int,
+    labels2: ctypes.POINTER(ctypes.c_char_p),
+    values2: ctypes.POINTER(ctypes.c_char_p),
+    options: libpostal_duplicate_options_t,
 ) -> int:
     return get_lib().libpostal_is_toponym_duplicate(
         num_components1, labels1, values1, num_components2, labels2, values2, options
@@ -604,10 +664,13 @@ def libpostal_get_default_fuzzy_duplicate_options_with_languages(
 
 
 def libpostal_is_name_duplicate_fuzzy(
-    num_tokens1: int, tokens1: ctypes.POINTER(ctypes.c_char_p),
-    token_scores1: ctypes.POINTER(ctypes.c_double), num_tokens2: int,
-    tokens2: ctypes.POINTER(ctypes.c_char_p), token_scores2: ctypes.POINTER(ctypes.c_double),
-    options: libpostal_fuzzy_duplicate_options_t
+    num_tokens1: int,
+    tokens1: ctypes.POINTER(ctypes.c_char_p),
+    token_scores1: ctypes.POINTER(ctypes.c_double),
+    num_tokens2: int,
+    tokens2: ctypes.POINTER(ctypes.c_char_p),
+    token_scores2: ctypes.POINTER(ctypes.c_double),
+    options: libpostal_fuzzy_duplicate_options_t,
 ) -> libpostal_fuzzy_duplicate_status_t:
     return get_lib().libpostal_is_name_duplicate_fuzzy(
         num_tokens1, tokens1, token_scores1, num_tokens2, tokens2, token_scores2, options
@@ -615,10 +678,13 @@ def libpostal_is_name_duplicate_fuzzy(
 
 
 def libpostal_is_street_duplicate_fuzzy(
-    num_tokens1: int, tokens1: ctypes.POINTER(ctypes.c_char_p),
-    token_scores1: ctypes.POINTER(ctypes.c_double), num_tokens2: int,
-    tokens2: ctypes.POINTER(ctypes.c_char_p), token_scores2: ctypes.POINTER(ctypes.c_double),
-    options: libpostal_fuzzy_duplicate_options_t
+    num_tokens1: int,
+    tokens1: ctypes.POINTER(ctypes.c_char_p),
+    token_scores1: ctypes.POINTER(ctypes.c_double),
+    num_tokens2: int,
+    tokens2: ctypes.POINTER(ctypes.c_char_p),
+    token_scores2: ctypes.POINTER(ctypes.c_double),
+    options: libpostal_fuzzy_duplicate_options_t,
 ) -> libpostal_fuzzy_duplicate_status_t:
     return get_lib().libpostal_is_street_duplicate_fuzzy(
         num_tokens1, tokens1, token_scores1, num_tokens2, tokens2, token_scores2, options
@@ -634,7 +700,9 @@ def libpostal_tokenize(
 def libpostal_normalize_string_languages(
     input_str: bytes, options: int, num_languages: int, languages: ctypes.POINTER(ctypes.c_char_p)
 ) -> bytes:
-    return get_lib().libpostal_normalize_string_languages(input_str, options, num_languages, languages)
+    return get_lib().libpostal_normalize_string_languages(
+        input_str, options, num_languages, languages
+    )
 
 
 def libpostal_normalize_string(input_str: bytes, options: int) -> bytes:
@@ -642,15 +710,25 @@ def libpostal_normalize_string(input_str: bytes, options: int) -> bytes:
 
 
 def libpostal_normalized_tokens(
-    input_str: bytes, string_options: int, token_options: int, whitespace: bool,
-    n: ctypes.POINTER(ctypes.c_size_t)
+    input_str: bytes,
+    string_options: int,
+    token_options: int,
+    whitespace: bool,
+    n: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(libpostal_normalized_token_t):
-    return get_lib().libpostal_normalized_tokens(input_str, string_options, token_options, whitespace, n)
+    return get_lib().libpostal_normalized_tokens(
+        input_str, string_options, token_options, whitespace, n
+    )
 
 
 def libpostal_normalized_tokens_languages(
-    input_str: bytes, string_options: int, token_options: int, whitespace: bool,
-    num_languages: int, languages: ctypes.POINTER(ctypes.c_char_p), n: ctypes.POINTER(ctypes.c_size_t)
+    input_str: bytes,
+    string_options: int,
+    token_options: int,
+    whitespace: bool,
+    num_languages: int,
+    languages: ctypes.POINTER(ctypes.c_char_p),
+    n: ctypes.POINTER(ctypes.c_size_t),
 ) -> ctypes.POINTER(libpostal_normalized_token_t):
     return get_lib().libpostal_normalized_tokens_languages(
         input_str, string_options, token_options, whitespace, num_languages, languages, n

@@ -33,9 +33,7 @@ def _download_and_verify(url: str, tar_path: Path, desc: str):
 
         if not verify_checksum(tar_path, expected_hash):
             os.remove(tar_path)
-            raise DependencyMissingError from None(
-                f"Checksum verification failed for {tar_path.name}"
-            )
+            raise DependencyMissingError(f"Checksum verification failed for {tar_path.name}")
     except Exception as e:
         # If the checksum file doesn't exist remotely or fails to download,
         # we strictly fail to prevent compromised or corrupt binaries in production.
@@ -43,9 +41,9 @@ def _download_and_verify(url: str, tar_path: Path, desc: str):
             os.remove(tar_path)
         if checksum_path.exists():
             os.remove(checksum_path)
-        raise DependencyMissingError from None(
+        raise DependencyMissingError(
             f"Failed to fetch or verify checksum for {tar_path.name}: {e}"
-        )
+        ) from None
 
     # 3. Extract after verification
     from ..runtime.downloader import _extract_tar_gz
